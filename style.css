@@ -1,0 +1,221 @@
+:root {
+  --bg: #fdfdfc;
+  --fg: #1c1e21;
+  --muted: #5a6069;
+  --accent: #0f62a8;
+  --accent-soft: #e3eef7;
+  --rule: #e2e2df;
+  --hero-bg: #10314e;
+  --hero-fg: #f2f6fa;
+  --hero-muted: #b8c9da;
+  --tag-bg: #eef1f4;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #15171a;
+    --fg: #e6e8ea;
+    --muted: #9aa3ad;
+    --accent: #6db3e8;
+    --accent-soft: #1d3448;
+    --rule: #2a2e33;
+    --hero-bg: #0c2036;
+    --hero-fg: #f2f6fa;
+    --hero-muted: #93a9bd;
+    --tag-bg: #23272c;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+               "Helvetica Neue", Arial, sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--fg);
+  background: var(--bg);
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ---------- hero ---------- */
+
+.hero {
+  background: var(--hero-bg);
+  color: var(--hero-fg);
+  padding: 3.5rem 1.5rem;
+}
+
+.hero-inner {
+  max-width: 46rem;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.avatar {
+  width: 8rem;
+  height: 8rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(255, 255, 255, 0.25);
+  flex-shrink: 0;
+}
+
+.hero h1 {
+  margin: 0 0 0.3rem;
+  font-size: 2.1rem;
+  line-height: 1.2;
+}
+
+.tagline {
+  margin: 0 0 0.2rem;
+  font-weight: 500;
+  font-size: 1.25rem;
+  min-height: 1.65em;
+}
+
+.dirac {
+  font-family: "STIX Two Math", "Cambria Math", Georgia, "Times New Roman", serif;
+  font-size: 1.15rem;
+  letter-spacing: 0.01em;
+}
+
+#superposition {
+  transition: opacity 0.45s ease;
+  color: #8ecdf7;
+  text-shadow: 0 0 14px rgba(142, 205, 247, 0.45);
+}
+
+.affiliation {
+  margin: 0 0 0.9rem;
+  color: var(--hero-muted);
+  font-size: 0.95rem;
+}
+
+.contact-links {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.contact-links a {
+  color: var(--hero-fg);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  padding: 0.25rem 0.9rem;
+  font-size: 0.9rem;
+}
+
+.contact-links a:hover {
+  background: rgba(255, 255, 255, 0.12);
+  text-decoration: none;
+}
+
+/* ---------- main ---------- */
+
+main {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 1rem 1.5rem 3rem;
+}
+
+section {
+  padding: 1.8rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+section:last-of-type { border-bottom: none; }
+
+h2 {
+  font-size: 1.35rem;
+  margin: 0 0 0.8rem;
+}
+
+h3 {
+  font-size: 1.02rem;
+  margin: 1.4rem 0 0.5rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+p { margin: 0 0 0.8rem; }
+
+/* topics + tags */
+
+.topics { padding-left: 1.2rem; margin: 0; }
+.topics li { margin-bottom: 0.3rem; }
+
+.tags {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tags li {
+  background: var(--tag-bg);
+  border-radius: 999px;
+  padding: 0.2rem 0.85rem;
+  font-size: 0.9rem;
+}
+
+/* publications */
+
+.pub-list { padding-left: 1.2rem; margin: 0; }
+.pub-list li { margin-bottom: 1.1rem; }
+.pub-title { font-weight: 600; }
+.pub-authors { font-size: 0.95rem; }
+.pub-venue { color: var(--muted); font-size: 0.9rem; font-style: italic; }
+
+/* timeline */
+
+.timeline {
+  display: grid;
+  grid-template-columns: 8.5rem 1fr;
+  row-gap: 0.9rem;
+  margin: 0;
+}
+
+.timeline dt {
+  color: var(--muted);
+  font-size: 0.92rem;
+  padding-top: 0.1rem;
+}
+
+.timeline dd { margin: 0; }
+
+/* contact */
+
+.contact-list { list-style: none; padding: 0; margin: 0; }
+.contact-list li { margin-bottom: 0.4rem; }
+
+/* footer */
+
+footer {
+  border-top: 1px solid var(--rule);
+  padding: 1.2rem 1.5rem 2rem;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+/* ---------- small screens ---------- */
+
+@media (max-width: 540px) {
+  .hero { padding: 2.5rem 1.2rem; }
+  .hero-inner { gap: 1.2rem; }
+  .avatar { width: 5.2rem; height: 5.2rem; font-size: 1.8rem; }
+  .hero h1 { font-size: 1.7rem; }
+  .dirac { font-size: 0.95rem; }
+  .timeline { grid-template-columns: 1fr; row-gap: 0.2rem; }
+  .timeline dd { margin-bottom: 0.8rem; }
+}

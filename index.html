@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Florian Heininger — PhD student in Quantum Machine Learning for Immunotherapies at the German Cancer Research Center (DKFZ), HI-TRON Mainz.">
+<title>Florian Heininger — Quantum Machine Learning for Immunotherapies</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <img class="avatar" src="portrait.jpg" alt="Portrait of Florian Heininger" width="480" height="480">
+    <div class="hero-text">
+      <h1>Florian Heininger</h1>
+      <p class="tagline dirac">|quantum⟩ ⊗ <span id="superposition">|physics⟩</span></p>
+      <p class="affiliation">Doctoral Researcher · German Cancer Research Center (DKFZ) · HI-TRON Mainz · Heidelberg University</p>
+      <nav class="contact-links">
+        <a href="mailto:florian.heininger@dkfz-heidelberg.de">Email</a>
+        <a href="https://orcid.org/0009-0006-4213-2599" rel="me">ORCID</a>
+        <a href="https://hi-tron.dkfz.de/index.html">HI-TRON</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section id="about">
+  <h2>About</h2>
+  <p>
+    I'm a physicist working at the intersection of two fields that famously
+    nobody understands: quantum computing and machine learning. Since May 2024
+    I've been a doctoral researcher at the
+    <a href="https://www.dkfz.de/en/">German Cancer Research Center (DKFZ)</a>,
+    or more precisely at the Helmholtz Institute for Translational Oncology
+    (HI-TRON) in Mainz.
+  </p>
+  <p>
+    The question I'm chasing is this: give the same immunotherapy to two patients
+    with the same diagnosis, and one of them gets dramatically better while the
+    other barely responds at all. Nobody can reliably say in advance which is
+    which. The answer is hiding somewhere in the data — in tumours, immune cells
+    and genes — it is just exceptionally well hidden. My job is to build models
+    that go looking for it, and to keep them honest when they'd rather report a
+    pattern that isn't there.
+  </p>
+</section>
+
+<section id="research">
+  <h2>Quantum Machine Learning</h2>
+  <p>
+    A classical bit is a decisive little thing: 0 or 1, pick one. A qubit refuses
+    to commit until you ask it directly, and it can be entangled with other
+    qubits, so asking one of them tells you something about the other. Physicists
+    have spent a century arguing about what that actually means, and engineers
+    have spent thirty years trying to build one that survives longer than a
+    millisecond.
+  </p>
+  <p>
+    <strong>Quantum machine learning</strong> asks the obvious follow-up
+    question: given these strange machines, can we learn anything with them? It
+    turns out that most of the classical toolbox has a quantum cousin by now —
+    there are <strong>quantum kernels</strong> standing in for support vector
+    machines, variational circuits playing the role of neural networks, quantum
+    versions of generative models, and quite a few ideas that don't have a
+    classical counterpart at all. My own favourites are the quantum kernels.
+  </p>
+  <p>
+    Does it beat classical machine learning? Sometimes, on some problems, if you
+    squint and choose your dataset carefully — which is the polite way of saying
+    that nobody knows yet.
+  </p>
+</section>
+
+<section id="contact">
+  <h2>Contact</h2>
+  <ul class="contact-list">
+    <li>Email: <a href="mailto:florian.heininger@dkfz-heidelberg.de">florian.heininger@dkfz-heidelberg.de</a></li>
+    <li>ORCID: <a href="https://orcid.org/0009-0006-4213-2599">0009-0006-4213-2599</a></li>
+    <li>DKFZ · HI-TRON Mainz, Germany</li>
+  </ul>
+</section>
+
+</main>
+
+<footer>
+  <p>© 2026 Florian Heininger · hand-written HTML, zero frameworks, mild quantum entanglement</p>
+</footer>
+
+<script>
+// Cycle through the basis states one at a time, cross-fading in place.
+(function () {
+  var el = document.getElementById("superposition");
+  if (!el || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  var outcomes = ["|physics⟩", "|machine learning⟩", "|information theory⟩"];
+  var i = 0;
+  setInterval(function () {
+    el.style.opacity = 0;
+    setTimeout(function () {
+      i = (i + 1) % outcomes.length;
+      el.textContent = outcomes[i];
+      el.style.opacity = 1;
+    }, 450);
+  }, 3000);
+})();
+</script>
+
+</body>
+</html>
