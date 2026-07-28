@@ -61,11 +61,29 @@ if ("IntersectionObserver" in window &&
   <p>
     The question I'm chasing is this: give the same immunotherapy to two patients
     with the same diagnosis, and one of them gets dramatically better while the
-    other barely responds at all. Why? Nobody can reliably say in advance which
+    other barely responds at all- but why? Nobody can reliably say in advance which
     is which. The answer is hiding somewhere in the data: in tumours, immune cells
-    and genes. It is just exceptionally well hidden. I am passionate about building models
+    and genes. Unfortunately, it does an exceptionally great job at hiding. I am passionate about building models
     that go looking for it, while keeping them honest when they'd rather report a
     pattern that isn't there.
+  </p>
+</section>
+
+<section id="learning" data-nav="ML">
+  <h2>Machine Learning</h2>
+  <p>
+    Machine learning is what you reach for when a problem clearly has a rule but
+    nobody can write it down. Rather than stating the rule, you show a model a
+    great many examples and let it fit one for itself. Given enough annotated
+    tumours, it will settle on a boundary that no pathologist could put into
+    words.
+  </p>
+  <p>
+    The catch in my field is that biological data is wide and short: tens of
+    thousands of measurements per patient, and only a few hundred patients to
+    learn from. A model then has far more freedom than it has evidence, and the
+    difficult part is no longer fitting the data but working out whether the fit
+    means anything at all.
   </p>
 </section>
 
@@ -185,25 +203,18 @@ if ("IntersectionObserver" in window &&
   // Cross-fade: whichever panel fills most of the screen is the visible one.
   if (document.documentElement.className.indexOf("has-panels") === -1) return;
 
-  var fadeFired = false;
+  // No timed fallback here on purpose. An earlier version un-faded every panel
+  // and disconnected this observer if it had not reported within 1.5s of load,
+  // which misfired whenever the initial callbacks were delayed (a backgrounded
+  // tab is enough) and left every panel permanently lit. The observer is
+  // already gated on IntersectionObserver existing, and it always delivers an
+  // initial entry per target, so the fallback only ever did harm.
   var fade = new IntersectionObserver(function (entries) {
-    fadeFired = true;
     entries.forEach(function (entry) {
       entry.target.classList.toggle("is-active", entry.intersectionRatio >= 0.5);
     });
   }, { threshold: [0, 0.5, 1] });
   sections.forEach(function (section) { fade.observe(section); });
-
-  // Safety net for an observer that never reports at all. Note this cannot key
-  // on "no panel is active" — that is the normal state while the hero fills the
-  // screen.
-  addEventListener("load", function () {
-    setTimeout(function () {
-      if (fadeFired) return;
-      fade.disconnect();
-      sections.forEach(function (s) { s.classList.add("is-active"); });
-    }, 1500);
-  });
 })();
 </script>
 
