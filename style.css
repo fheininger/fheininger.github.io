@@ -1,29 +1,20 @@
-:root {
-  --bg: #fdfdfc;
-  --fg: #1c1e21;
-  --muted: #5a6069;
-  --accent: #0f62a8;
-  --accent-soft: #e3eef7;
-  --rule: #e2e2df;
-  --hero-bg: #10314e;
-  --hero-fg: #f2f6fa;
-  --hero-muted: #b8c9da;
-  --tag-bg: #eef1f4;
-}
+/* One dark theme everywhere — the hero navy now carries the whole page, so the
+   site does not follow the system light/dark preference. color-scheme: dark
+   brings scrollbars and form controls along with it. */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #15171a;
-    --fg: #e6e8ea;
-    --muted: #9aa3ad;
-    --accent: #6db3e8;
-    --accent-soft: #1d3448;
-    --rule: #2a2e33;
-    --hero-bg: #0c2036;
-    --hero-fg: #f2f6fa;
-    --hero-muted: #93a9bd;
-    --tag-bg: #23272c;
-  }
+:root {
+  color-scheme: dark;
+
+  --bg: #10314e;
+  --fg: #f2f6fa;
+  --muted: #b8c9da;
+  --accent: #8ecdf7;
+  --accent-soft: #1a4670;
+  --rule: #23557f;
+  --hero-bg: var(--bg);
+  --hero-fg: var(--fg);
+  --hero-muted: var(--muted);
+  --tag-bg: #1a4670;
 }
 
 * { box-sizing: border-box; }
@@ -41,16 +32,28 @@ body {
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
+html { scroll-behavior: smooth; }
+
 /* ---------- hero ---------- */
+
+/* The hero owns the whole first screen: nothing below it shows until you
+   scroll. 100svh (small viewport) keeps mobile browser chrome from pushing the
+   scroll cue below the fold; the plain 100vh above it is the fallback. */
 
 .hero {
   background: var(--hero-bg);
   color: var(--hero-fg);
-  padding: 3.5rem 1.5rem;
+  padding: 3.5rem 1.5rem 5rem;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  position: relative;
 }
 
 .hero-inner {
   max-width: 46rem;
+  width: 100%;
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -110,11 +113,127 @@ a:hover { text-decoration: underline; }
   border-radius: 999px;
   padding: 0.25rem 0.9rem;
   font-size: 0.9rem;
+  transition: transform 0.15s ease, background 0.15s ease,
+              border-color 0.15s ease;
 }
 
 .contact-links a:hover {
   background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.55);
+  transform: translateY(-1px);
   text-decoration: none;
+}
+
+/* ---------- hero jump links ---------- */
+
+/* Deliberately not pill-shaped: these move you down the page, so they should
+   not read as another row of profile links. */
+
+.hero-sections {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.3rem;
+  margin-top: 1.6rem;
+}
+
+.hero-sections a {
+  color: var(--accent);
+  font-size: 0.95rem;
+  padding-bottom: 2px;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.15s ease, opacity 0.15s ease;
+}
+
+.hero-sections a::before {
+  content: "\2193";       /* down arrow */
+  margin-right: 0.4rem;
+  opacity: 0.65;
+}
+
+.hero-sections a:hover {
+  border-bottom-color: var(--accent);
+  text-decoration: none;
+}
+
+/* ---------- scroll cue ---------- */
+
+.scroll-cue {
+  position: absolute;
+  left: 50%;
+  bottom: 1.6rem;
+  transform: translateX(-50%);
+  color: var(--hero-muted);
+  font-size: 1.9rem;
+  line-height: 1;
+  padding: 0.2rem 0.9rem;
+  animation: cue-bob 2.4s ease-in-out infinite;
+}
+
+.scroll-cue:hover {
+  color: var(--hero-fg);
+  text-decoration: none;
+}
+
+@keyframes cue-bob {
+  0%, 100% { transform: translate(-50%, 0); }
+  50%      { transform: translate(-50%, 6px); }
+}
+
+/* ---------- section bar ---------- */
+
+/* Hidden while the hero is on screen; slides in once you scroll past it. */
+
+.section-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  gap: 1.4rem;
+  padding: 0.7rem 1.5rem;
+  background: var(--bg);
+  border-bottom: 1px solid var(--rule);
+  transform: translateY(-100%);
+  opacity: 0;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.section-nav::-webkit-scrollbar { display: none; }
+
+@supports (backdrop-filter: blur(10px)) or (-webkit-backdrop-filter: blur(10px)) {
+  .section-nav {
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+}
+
+.section-nav.is-visible {
+  transform: none;
+  opacity: 1;
+}
+
+.section-nav a {
+  color: var(--muted);
+  font-size: 0.92rem;
+  white-space: nowrap;
+  padding-bottom: 0.15rem;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.section-nav a:hover {
+  color: var(--fg);
+  text-decoration: none;
+}
+
+.section-nav a.is-active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
 }
 
 /* ---------- main ---------- */
@@ -126,8 +245,9 @@ main {
 }
 
 section {
-  padding: 1.8rem 0;
+  padding: 4rem 0;
   border-bottom: 1px solid var(--rule);
+  scroll-margin-top: 4.5rem;   /* so a jumped-to heading clears the fixed bar */
 }
 
 section:last-of-type { border-bottom: none; }
@@ -208,10 +328,71 @@ footer {
   font-size: 0.85rem;
 }
 
+/* ---------- one section per screen ---------- */
+
+/* Above 700px each section becomes a full-screen panel that the scroll snaps
+   to, so you only ever look at one of them, and they cross-fade as you move
+   between them. Below that (phones), text like the Quantum ML section runs
+   past one screen, so the page stays a normal continuous scroll. */
+
+@media (min-width: 701px) and (prefers-reduced-motion: no-preference) {
+  html { scroll-snap-type: y mandatory; }
+
+  .hero { scroll-snap-align: start; scroll-snap-stop: always; }
+
+  main { padding: 0 1.5rem; }
+
+  main section {
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 5rem 0 3rem;      /* top clears the fixed section bar */
+    border-bottom: none;
+    scroll-margin-top: 0;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
+  /* The fade itself is opt-in from JS (see .has-panels in index.html), so a
+     browser without IntersectionObserver never hides a section it cannot
+     bring back. */
+  .has-panels main section {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+  }
+
+  .has-panels main section.is-active {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* The footer is short; park its bottom edge at the viewport bottom rather
+     than giving it a screen of its own. */
+  footer { scroll-snap-align: end; }
+}
+
+/* ---------- reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .scroll-cue { animation: none; }
+  .section-nav,
+  .contact-links a { transition: none; }
+}
+
 /* ---------- small screens ---------- */
 
 @media (max-width: 540px) {
-  .hero { padding: 2.5rem 1.2rem; }
+  .hero { padding: 2.5rem 1.2rem 4.5rem; }
+  .section-nav { gap: 1.1rem; padding: 0.6rem 1rem; justify-content: flex-start; }
+  .section-nav a { font-size: 0.86rem; }
+  .scroll-cue { bottom: 1.1rem; font-size: 1.7rem; }
+  .hero-sections { gap: 0.9rem 1.1rem; margin-top: 1.2rem; }
+  .hero-sections a { font-size: 0.9rem; }
+  section { padding: 3rem 0; }
   .hero-inner { gap: 1.2rem; }
   .avatar { width: 5.2rem; height: 5.2rem; font-size: 1.8rem; }
   .hero h1 { font-size: 1.7rem; }
