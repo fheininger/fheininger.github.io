@@ -54,22 +54,6 @@ html { scroll-behavior: smooth; }
   position: relative;
 }
 
-/* The ambient canvas fills the hero and sits under everything in it. */
-.hero-bg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-  z-index: 0;
-}
-
-/* Both already establish their own position; they only need to sit above the
-   canvas. .scroll-cue keeps the absolute positioning declared further down. */
-.hero-inner { position: relative; }
-.hero-inner,
-.scroll-cue { z-index: 1; }
-
 .hero-inner {
   max-width: 46rem;
   width: 100%;
@@ -319,13 +303,6 @@ h2 {
   overflow: visible;
 }
 
-.viz figcaption {
-  margin-top: 0.7rem;
-  color: var(--muted);
-  font-size: 0.8rem;
-  line-height: 1.45;
-}
-
 .viz-axis {
   stroke: var(--rule);
   stroke-width: 1;
@@ -337,27 +314,60 @@ h2 {
   stroke-linecap: round;
 }
 
-.viz-sphere,
-.viz-equator { stroke: var(--rule); stroke-width: 1.5; }
 .viz-boundary,
 .viz-a { stroke: var(--accent); }
 .viz-b { stroke: var(--accent-2); }
 
-.viz-vector { stroke: var(--accent); stroke-width: 2; stroke-linecap: round; }
+/* The forking branches. Dashed because which one a patient takes is the part
+   nobody can predict. They fade in rather than draw in: a dash pattern and the
+   draw-in animation would otherwise compete for stroke-dasharray. */
+.viz-branch {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 5 6;
+}
 
-.viz-dot { fill: var(--accent); }
-.viz-seed { fill: var(--muted); }
-.viz-b-fill { fill: var(--accent-2); }
+.viz-trunk { stroke: var(--muted); }
+.viz-node { fill: var(--fg); }
+
+/* An outcome that has not happened yet: outlined, not filled in. */
+.viz-open { fill: var(--bg); stroke-width: 2; }
+.viz-end-a { stroke: var(--accent); }
+.viz-end-b { stroke: var(--accent-2); }
+
+.viz-label { font-size: 9px; }
+.viz-label-a { fill: var(--accent); }
+.viz-label-b { fill: var(--accent-2); }
+
+/* Venn diagram. The two sets are translucent so the lens where they meet is
+   naturally brighter than either on its own, before it is tinted further. */
+.viz-set { fill-opacity: 0.09; stroke-width: 1.5; }
+.viz-set-a { fill: var(--accent); stroke: var(--accent); }
+.viz-set-b { fill: var(--accent-2); stroke: var(--accent-2); }
+
+.viz-lens { fill: var(--accent); fill-opacity: 0.16; stroke: none; }
+
+.viz-qml {
+  fill: var(--fg);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  dominant-baseline: central;
+}
+
+.viz-set-label { fill: var(--muted); font-size: 8px; }
+
+/* The dilution refrigerator: round caps keep the plates reading as a sketch. */
+.viz-fridge line { stroke: var(--accent); stroke-width: 1.6; stroke-linecap: round; }
+.viz-chip { fill: var(--accent); }
+
+.viz-net circle { fill: var(--accent-2); }
+.viz-edges line { stroke: var(--accent-2); stroke-width: 0.8; opacity: 0.45; }
 
 .viz-cloud { opacity: 0.9; }
 .viz-cloud circle { fill: var(--accent); }
 .viz-cloud-b circle { fill: var(--accent-2); }
-
-.viz-ket {
-  fill: var(--muted);
-  font-size: 11px;
-  font-family: "STIX Two Math", "Cambria Math", Georgia, serif;
-}
 
 h3 {
   font-size: 1.02rem;
@@ -428,6 +438,20 @@ p { margin: 0 0 0.8rem; }
 
 .timeline dd { margin: 0; }
 
+/* my work */
+
+/* Publications and talks side by side. Stacked, the two lists run past a single
+   panel; in two columns they fit, and they use the gutter this section has free
+   because it carries no diagram. */
+.work-cols { display: grid; gap: 1.4rem 3rem; }
+
+@media (min-width: 701px) {
+  .work-cols { grid-template-columns: 1fr 1fr; align-items: start; }
+}
+
+.work-cols h3 { margin-top: 0; }
+.work-cols .pub-list li { margin-bottom: 0.85rem; }
+
 /* contact */
 
 .contact-list { list-style: none; padding: 0; margin: 0; }
@@ -455,9 +479,20 @@ footer {
 
   .hero { scroll-snap-align: start; scroll-snap-stop: always; }
 
+  /* Same offset as main, so the name and the section headings share a left
+     edge instead of the hero sitting centred over left-aligned sections. */
+  .hero-inner { margin-inline: min(5rem, 6vw) auto; }
+
   /* Wider than the reading measure, because the diagrams live in the gutter the
-     46rem column used to leave empty. The prose itself stays around 40rem. */
-  main { padding: 0 1.5rem; max-width: 64rem; }
+     46rem column used to leave empty. The prose itself stays around 40rem.
+     Biased left rather than centred, so the space a centred block would waste
+     as equal margins goes to the figures instead. The offset is capped in vw so
+     it eases off rather than crowding the right edge on a narrow laptop. */
+  main {
+    padding: 0 1.5rem;
+    max-width: 76rem;
+    margin-inline: min(5rem, 6vw) auto;
+  }
 
   main section {
     min-height: 100vh;
@@ -476,18 +511,29 @@ footer {
      whole panel. Absolute rather than a grid column so the vertical centring is
      exact no matter how many paragraphs the section has, and so sections
      without a diagram need no special case at all. */
-  main section:has(.viz) { position: relative; padding-right: 20rem; }
+  /* The figure column scales with the viewport rather than sitting at a fixed
+     width: at a fixed 27rem an 800px laptop would be left with barely 17rem of
+     prose beside it. */
+  main section:has(.viz) {
+    position: relative;
+    padding-right: clamp(17rem, 30vw, 27rem);
+  }
 
   /* One reading measure for every section, so the sections without a diagram
      line up with the ones that have and do not sprawl to the full 64rem. */
   main section > :not(.viz) { max-width: 40rem; }
+
+  /* The exception: two columns of lists need more than one column of prose.
+     Must follow the rule above — same specificity, so source order decides. */
+  main section > .work-cols { max-width: 56rem; }
 
   main section > .viz {
     position: absolute;
     right: 0;
     top: 50%;
     transform: translateY(-50%);
-    width: 17rem;
+    width: clamp(14rem, 26vw, 24rem);
+    max-width: none;   /* the base 17rem cap is for the stacked layout only */
     margin: 0;
   }
 
@@ -518,19 +564,48 @@ footer {
     transition: stroke-dashoffset 1.1s ease 0.15s;
   }
 
-  .has-panels main section .viz-dot,
-  .has-panels main section .viz-state,
+  .has-panels main section .viz-node,
   .has-panels main section .viz-cloud,
-  .has-panels main section .viz-ket,
-  .has-panels main section .viz figcaption { opacity: 0; }
+  .has-panels main section .viz-label,
+  .has-panels main section .viz-branch,
+  .has-panels main section .viz-open,
+  .has-panels main section .viz-parts,
+  .has-panels main section .viz-lens,
+  .has-panels main section .viz-qml { opacity: 0; }
 
-  .has-panels main section.is-active .viz-dot,
-  .has-panels main section.is-active .viz-state,
-  .has-panels main section.is-active .viz-ket,
-  .has-panels main section.is-active .viz figcaption {
+  /* Wires and the taper are scaffolding: they arrive with the panel, and the
+     gates and qubits settle onto them a moment later. */
+  .has-panels main section.is-active .viz-parts {
     opacity: 1;
-    transition: opacity 0.6s ease 0.95s;
+    transition: opacity 0.5s ease 0.55s;
   }
+
+  /* The trunk draws, then the fork appears, then the two possible futures,
+     then where each one lands, then what to call them. */
+  .has-panels main section.is-active .viz-node {
+    opacity: 1;
+    transition: opacity 0.5s ease 1s;
+  }
+  .has-panels main section.is-active .viz-branch {
+    opacity: 1;
+    transition: opacity 0.5s ease 1.05s;
+  }
+  .has-panels main section.is-active .viz-open {
+    opacity: 1;
+    transition: opacity 0.5s ease 1.3s;
+  }
+  .has-panels main section.is-active .viz-label {
+    opacity: 1;
+    transition: opacity 0.5s ease 1.45s;
+  }
+
+  /* Last of all, the region that only exists because the other two overlap. */
+  .has-panels main section.is-active .viz-lens,
+  .has-panels main section.is-active .viz-qml {
+    opacity: 1;
+    transition: opacity 0.6s ease 1.1s;
+  }
+
 
   /* The two clouds land one after the other, so the eye reads "two classes"
      before the boundary between them stops moving. */

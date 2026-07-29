@@ -22,9 +22,6 @@ if ("IntersectionObserver" in window &&
 <body>
 
 <header class="hero">
-  <!-- Ambient drifting-qubit field. Purely decorative, drawn in JS, and absent
-       entirely under reduced motion. -->
-  <canvas class="hero-bg" aria-hidden="true"></canvas>
   <div class="hero-inner">
     <img class="avatar" src="portrait.jpg" alt="Portrait of Florian Heininger" width="480" height="480">
     <div class="hero-text">
@@ -71,20 +68,25 @@ if ("IntersectionObserver" in window &&
     pattern that isn't there.
   </p>
 
-  <!-- Two patients, one diagnosis, two trajectories: the paragraph as a picture.
-       pathLength="1" normalises every stroke so one CSS rule draws them all. -->
+  <!-- One shared course that forks. The trunk is solid because it is what you
+       know; the branches are dashed because which one a patient takes is
+       precisely what cannot be said in advance. The no-response branch simply
+       carries the trunk's own line onward, so the responder is the only one
+       that departs from it. -->
   <figure class="viz">
     <svg viewBox="0 0 200 200" role="img"
-         aria-label="Two response curves diverging from a shared starting point">
+         aria-label="A level course that forks: one dashed line carries straight on, labelled no response, while another rises away from it, labelled good response">
       <line class="viz-axis" x1="24" y1="176" x2="184" y2="176"/>
-      <line class="viz-axis" x1="24" y1="176" x2="24" y2="28"/>
-      <path class="viz-draw viz-a" pathLength="1" d="M28 116 C 76 110, 108 74, 180 40"/>
-      <path class="viz-draw viz-b" pathLength="1" d="M28 116 C 76 124, 112 140, 180 154"/>
-      <circle class="viz-dot viz-seed" cx="28" cy="116" r="4.5"/>
-      <circle class="viz-dot viz-a-fill" cx="180" cy="40" r="4.5"/>
-      <circle class="viz-dot viz-b-fill" cx="180" cy="154" r="4.5"/>
+      <line class="viz-axis" x1="24" y1="28" x2="24" y2="176"/>
+      <path class="viz-draw viz-trunk" pathLength="1" d="M32 116 L96 116"/>
+      <path class="viz-branch viz-b" d="M96 116 L176 116"/>
+      <path class="viz-branch viz-a" d="M96 116 C 124 112, 148 82, 176 52"/>
+      <circle class="viz-node" cx="96" cy="116" r="4.5"/>
+      <circle class="viz-open viz-end-a" cx="176" cy="52" r="5"/>
+      <circle class="viz-open viz-end-b" cx="176" cy="116" r="5"/>
+      <text class="viz-label viz-label-a" x="176" y="40" text-anchor="end">good response</text>
+      <text class="viz-label viz-label-b" x="176" y="136" text-anchor="end">no response</text>
     </svg>
-    <figcaption>Same diagnosis, same therapy, two outcomes.</figcaption>
   </figure>
 </section>
 
@@ -127,7 +129,6 @@ if ("IntersectionObserver" in window &&
         <circle cx="118" cy="178" r="4"/><circle cx="165" cy="72" r="4"/>
       </g>
     </svg>
-    <figcaption>A boundary nobody could write down by hand.</figcaption>
   </figure>
 </section>
 
@@ -156,28 +157,72 @@ if ("IntersectionObserver" in window &&
     that nobody knows yet.
   </p>
 
-  <!-- Bloch sphere. The tip precesses about the z-axis; the projection is the
-       real one (see the script at the foot of the page), not a flat spin. -->
+  <!-- The section's own opening line as a picture: two fields, and the thing
+       that appears where they meet. Circles r=56 centred 64 apart, so they cross
+       at exactly (100,30) and (100,122) and the lens is 48 wide by 92 tall. The
+       lens is its own path so it can be tinted and revealed on its own. -->
   <figure class="viz">
-    <svg viewBox="0 0 200 200" role="img"
-         aria-label="Bloch sphere with a state vector precessing about the z-axis">
-      <circle class="viz-draw viz-sphere" pathLength="1" cx="100" cy="100" r="74"/>
-      <ellipse class="viz-draw viz-equator" pathLength="1"
-               cx="100" cy="100" rx="74" ry="21"/>
-      <line class="viz-axis" x1="100" y1="18" x2="100" y2="182"/>
-      <g class="viz-state">
-        <line class="viz-vector" x1="100" y1="100" x2="157" y2="53"/>
-        <circle class="viz-dot viz-tip" cx="157" cy="53" r="5"/>
+    <svg viewBox="0 0 200 158" role="img"
+         aria-label="A Venn diagram: a circle for quantum computing, a circle for machine learning, and quantum machine learning in the region where they overlap">
+
+      <circle class="viz-set viz-set-a" cx="68" cy="76" r="56"/>
+      <circle class="viz-set viz-set-b" cx="132" cy="76" r="56"/>
+
+      <g class="viz-parts">
+        <!-- A dilution refrigerator: the picture nearly everyone has actually
+             seen of a quantum computer. Plates narrow towards the bottom. -->
+        <g class="viz-fridge">
+          <line x1="44" y1="36" x2="44" y2="46"/>
+          <line x1="26" y1="46" x2="62" y2="46"/>
+          <line x1="29" y1="58" x2="59" y2="58"/>
+          <line x1="31" y1="70" x2="57" y2="70"/>
+          <line x1="34" y1="82" x2="54" y2="82"/>
+          <line x1="37" y1="94" x2="51" y2="94"/>
+          <line x1="38" y1="46" x2="38" y2="94"/>
+          <line x1="44" y1="46" x2="44" y2="94"/>
+          <line x1="50" y1="46" x2="50" y2="94"/>
+          <circle class="viz-chip" cx="44" cy="101" r="3.5"/>
+        </g>
+
+        <!-- A neural network. Deliberately not a scatter with a boundary: the
+             Machine Learning section directly above already owns that image. -->
+        <g class="viz-net">
+          <g class="viz-edges">
+            <line x1="138" y1="58" x2="156" y2="49"/><line x1="138" y1="58" x2="156" y2="67"/>
+            <line x1="138" y1="58" x2="156" y2="85"/><line x1="138" y1="58" x2="156" y2="103"/>
+            <line x1="138" y1="76" x2="156" y2="49"/><line x1="138" y1="76" x2="156" y2="67"/>
+            <line x1="138" y1="76" x2="156" y2="85"/><line x1="138" y1="76" x2="156" y2="103"/>
+            <line x1="138" y1="94" x2="156" y2="49"/><line x1="138" y1="94" x2="156" y2="67"/>
+            <line x1="138" y1="94" x2="156" y2="85"/><line x1="138" y1="94" x2="156" y2="103"/>
+            <line x1="156" y1="49" x2="174" y2="67"/><line x1="156" y1="49" x2="174" y2="85"/>
+            <line x1="156" y1="67" x2="174" y2="67"/><line x1="156" y1="67" x2="174" y2="85"/>
+            <line x1="156" y1="85" x2="174" y2="67"/><line x1="156" y1="85" x2="174" y2="85"/>
+            <line x1="156" y1="103" x2="174" y2="67"/><line x1="156" y1="103" x2="174" y2="85"/>
+          </g>
+          <circle cx="138" cy="58" r="3.5"/><circle cx="138" cy="76" r="3.5"/>
+          <circle cx="138" cy="94" r="3.5"/>
+          <circle cx="156" cy="49" r="3.5"/><circle cx="156" cy="67" r="3.5"/>
+          <circle cx="156" cy="85" r="3.5"/><circle cx="156" cy="103" r="3.5"/>
+          <circle cx="174" cy="67" r="3.5"/><circle cx="174" cy="85" r="3.5"/>
+        </g>
       </g>
-      <text class="viz-ket" x="100" y="12" text-anchor="middle">|0⟩</text>
-      <text class="viz-ket" x="100" y="196" text-anchor="middle">|1⟩</text>
+
+      <path class="viz-lens" d="M100 30 A56 56 0 0 1 100 122 A56 56 0 0 1 100 30"/>
+      <text class="viz-qml" x="100" y="76" text-anchor="middle">QML</text>
+
+      <text class="viz-label viz-set-label" x="52" y="148" text-anchor="middle">quantum computing</text>
+      <text class="viz-label viz-set-label" x="150" y="148" text-anchor="middle">machine learning</text>
     </svg>
-    <figcaption>A qubit, refusing to commit.</figcaption>
   </figure>
 </section>
 
-<section id="publications">
-  <h2>Publications</h2>
+<section id="publications" data-nav="My work">
+  <h2>My work</h2>
+
+  <div class="work-cols">
+
+    <div>
+      <h3>Publications</h3>
   <ul class="pub-list">
     <li>
       <span class="pub-title">Clinical Data Classification with Quantum Kernel Alignment</span><br>
@@ -192,6 +237,37 @@ if ("IntersectionObserver" in window &&
       <span class="pub-status">In preparation</span>
     </li>
   </ul>
+
+    </div>
+
+    <div>
+      <h3>Talks &amp; posters</h3>
+  <ul class="pub-list">
+    <li>
+      <span class="pub-title">Quantum computing for personalized medicine: advances in quantum
+        kernel utilization for machine learning</span><br>
+      <span class="pub-venue">HI-TRON Symposium 2026</span>
+      <span class="pub-status">Talk</span>
+    </li>
+    <li>
+      <span class="pub-title">Quantum Computing in Oncology</span><br>
+      <span class="pub-venue">HI-TRON Symposium 2025</span>
+      <span class="pub-status">Talk</span>
+    </li>
+    <li>
+      <span class="pub-title">Imbalanced Classification with Quantum Kernel Methods</span><br>
+      <span class="pub-venue">QTML 2025</span>
+      <span class="pub-status">Poster</span>
+    </li>
+    <li>
+      <span class="pub-title">Quantum Kernel Alignment for Clinical Data Classification</span><br>
+      <span class="pub-venue">HAICON 2026</span>
+      <span class="pub-status">Poster</span>
+    </li>
+  </ul>
+    </div>
+
+  </div>
 </section>
 
 <section id="contact">
@@ -311,116 +387,6 @@ if ("IntersectionObserver" in window &&
   sections.forEach(function (section) { fade.observe(section); });
 })();
 
-// Ambient field behind the hero: points drifting, with a link drawn between any
-// two that stray close together. Deliberately near the threshold of visibility —
-// it should register as texture, not as a foreground animation.
-(function () {
-  var canvas = document.querySelector(".hero-bg");
-  var hero = document.querySelector(".hero");
-  if (!canvas || !hero || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-  var ctx = canvas.getContext("2d");
-  var points = [], w = 0, h = 0, frame = null;
-  var LINK = 130;   // px below which two points are considered entangled
-
-  function resize() {
-    var dpr = Math.min(devicePixelRatio || 1, 2);
-    w = canvas.clientWidth;
-    h = canvas.clientHeight;
-    canvas.width = Math.round(w * dpr);
-    canvas.height = Math.round(h * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    // Density scales with area, so a wide desktop is not sparse and a phone is
-    // not a soup of points.
-    var want = Math.max(18, Math.min(64, Math.round(w * h / 17000)));
-    while (points.length > want) points.pop();
-    while (points.length < want) {
-      points.push({
-        x: Math.random() * w, y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.13, vy: (Math.random() - 0.5) * 0.13
-      });
-    }
-  }
-
-  function draw() {
-    ctx.clearRect(0, 0, w, h);
-    for (var i = 0; i < points.length; i++) {
-      var p = points[i];
-      p.x += p.vx; p.y += p.vy;
-      if (p.x < 0 || p.x > w) p.vx *= -1;
-      if (p.y < 0 || p.y > h) p.vy *= -1;
-      for (var j = i + 1; j < points.length; j++) {
-        var q = points[j], dx = p.x - q.x, dy = p.y - q.y;
-        var d = Math.sqrt(dx * dx + dy * dy);
-        if (d > LINK) continue;
-        ctx.strokeStyle = "rgba(142, 205, 247, " + (0.16 * (1 - d / LINK)).toFixed(3) + ")";
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y); ctx.stroke();
-      }
-      ctx.fillStyle = "rgba(142, 205, 247, 0.42)";
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, 1.4, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    frame = requestAnimationFrame(draw);
-  }
-
-  function run(on) {
-    if (on && frame === null) frame = requestAnimationFrame(draw);
-    if (!on && frame !== null) { cancelAnimationFrame(frame); frame = null; }
-  }
-
-  resize();
-  addEventListener("resize", resize, { passive: true });
-  // No point burning frames on a hero that has scrolled away, or on a tab
-  // nobody is looking at.
-  if ("IntersectionObserver" in window) {
-    new IntersectionObserver(function (entries) {
-      run(entries[0].isIntersecting && !document.hidden);
-    }, { threshold: 0 }).observe(hero);
-  } else {
-    run(true);
-  }
-  addEventListener("visibilitychange", function () {
-    run(!document.hidden && hero.getBoundingClientRect().bottom > 0);
-  });
-})();
-
-// Let the Bloch vector precess about the z-axis. The tip follows the real
-// projection of a fixed-polar-angle orbit onto the drawn ellipse, so it tracks
-// the equator's perspective instead of spinning flat in the plane of the screen.
-(function () {
-  var state = document.querySelector(".viz-state");
-  var panel = document.getElementById("research");
-  if (!state || !panel || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-  var line = state.querySelector(".viz-vector");
-  var tip = state.querySelector(".viz-tip");
-  var CX = 100, CY = 100, R = 74, RY = 21;   // must match the SVG above
-  var THETA = 0.9;                            // polar angle, radians
-  var sinT = Math.sin(THETA), cosT = Math.cos(THETA);
-  var phi = 0, frame = null;
-
-  function step() {
-    phi += 0.006;
-    var x = CX + R * sinT * Math.cos(phi);
-    var y = CY - R * cosT + RY * sinT * Math.sin(phi);
-    line.setAttribute("x2", x.toFixed(1));
-    line.setAttribute("y2", y.toFixed(1));
-    tip.setAttribute("cx", x.toFixed(1));
-    tip.setAttribute("cy", y.toFixed(1));
-    frame = requestAnimationFrame(step);
-  }
-
-  // Only while its own panel is on screen.
-  if (!("IntersectionObserver" in window)) return;
-  new IntersectionObserver(function (entries) {
-    var on = entries[0].isIntersecting;
-    if (on && frame === null) frame = requestAnimationFrame(step);
-    if (!on && frame !== null) { cancelAnimationFrame(frame); frame = null; }
-  }, { threshold: 0.2 }).observe(panel);
-})();
 </script>
 
 </body>
