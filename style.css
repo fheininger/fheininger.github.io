@@ -296,6 +296,19 @@ p { margin: 0 0 0.8rem; }
 .pub-authors { font-size: 0.95rem; }
 .pub-venue { color: var(--muted); font-size: 0.9rem; font-style: italic; }
 
+/* Status of an unpublished entry ("In preparation", "Pending"). A pill rather
+   than more italic text, so it reads as state and not as a venue. */
+.pub-status {
+  display: inline-block;
+  background: var(--tag-bg);
+  border-radius: 999px;
+  padding: 0.05rem 0.6rem;
+  margin-top: 0.15rem;
+  font-size: 0.8rem;
+  font-style: normal;
+  color: var(--fg);
+}
+
 /* timeline */
 
 .timeline {
