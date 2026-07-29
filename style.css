@@ -9,6 +9,9 @@
   --fg: #f2f6fa;
   --muted: #b8c9da;
   --accent: #8ecdf7;
+  /* Second hue, used only in the diagrams where two classes must be told apart.
+     Warm against the blue so the distinction survives most colour-blindness. */
+  --accent-2: #f6a97c;
   --accent-soft: #1a4670;
   --rule: #23557f;
   --hero-bg: var(--bg);
@@ -50,6 +53,22 @@ html { scroll-behavior: smooth; }
   align-items: center;
   position: relative;
 }
+
+/* The ambient canvas fills the hero and sits under everything in it. */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 0;
+}
+
+/* Both already establish their own position; they only need to sit above the
+   canvas. .scroll-cue keeps the absolute positioning declared further down. */
+.hero-inner { position: relative; }
+.hero-inner,
+.scroll-cue { z-index: 1; }
 
 .hero-inner {
   max-width: 46rem;
@@ -252,9 +271,92 @@ section {
 
 section:last-of-type { border-bottom: none; }
 
+/* ---------- eyebrow ---------- */
+
+/* "01 / About" above each heading, generated in JS from the section order. The
+   rule before it is what makes it read as a chapter marker rather than a line
+   of text. */
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 0 0 0.9rem;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  content: "";
+  width: 2.4rem;
+  height: 1px;
+  background: var(--accent);
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
 h2 {
   font-size: 1.35rem;
   margin: 0 0 0.8rem;
+}
+
+/* ---------- section diagrams ---------- */
+
+/* Hand-written SVG rather than images: nothing to download, nothing to license,
+   crisp at any size, and each one actually depicts what its section says. */
+
+.viz {
+  margin: 2rem 0 0;
+  max-width: 17rem;
+}
+
+.viz svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.viz figcaption {
+  margin-top: 0.7rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.viz-axis {
+  stroke: var(--rule);
+  stroke-width: 1;
+}
+
+.viz-draw {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.viz-sphere,
+.viz-equator { stroke: var(--rule); stroke-width: 1.5; }
+.viz-boundary,
+.viz-a { stroke: var(--accent); }
+.viz-b { stroke: var(--accent-2); }
+
+.viz-vector { stroke: var(--accent); stroke-width: 2; stroke-linecap: round; }
+
+.viz-dot { fill: var(--accent); }
+.viz-seed { fill: var(--muted); }
+.viz-b-fill { fill: var(--accent-2); }
+
+.viz-cloud { opacity: 0.9; }
+.viz-cloud circle { fill: var(--accent); }
+.viz-cloud-b circle { fill: var(--accent-2); }
+
+.viz-ket {
+  fill: var(--muted);
+  font-size: 11px;
+  font-family: "STIX Two Math", "Cambria Math", Georgia, serif;
 }
 
 h3 {
@@ -353,7 +455,9 @@ footer {
 
   .hero { scroll-snap-align: start; scroll-snap-stop: always; }
 
-  main { padding: 0 1.5rem; }
+  /* Wider than the reading measure, because the diagrams live in the gutter the
+     46rem column used to leave empty. The prose itself stays around 40rem. */
+  main { padding: 0 1.5rem; max-width: 64rem; }
 
   main section {
     min-height: 100vh;
@@ -366,6 +470,25 @@ footer {
     scroll-margin-top: 0;
     scroll-snap-align: start;
     scroll-snap-stop: always;
+  }
+
+  /* Prose left, diagram parked in the right gutter and centred against the
+     whole panel. Absolute rather than a grid column so the vertical centring is
+     exact no matter how many paragraphs the section has, and so sections
+     without a diagram need no special case at all. */
+  main section:has(.viz) { position: relative; padding-right: 20rem; }
+
+  /* One reading measure for every section, so the sections without a diagram
+     line up with the ones that have and do not sprawl to the full 64rem. */
+  main section > :not(.viz) { max-width: 40rem; }
+
+  main section > .viz {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 17rem;
+    margin: 0;
   }
 
   /* The fade itself is opt-in from JS (see .has-panels in index.html), so a
@@ -381,6 +504,41 @@ footer {
     opacity: 1;
     transform: none;
   }
+
+  /* Each diagram draws itself once, as its panel arrives. Every stroke carries
+     pathLength="1", so a single dash length animates all of them regardless of
+     their real geometry. */
+  .has-panels main section .viz-draw {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+
+  .has-panels main section.is-active .viz-draw {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 1.1s ease 0.15s;
+  }
+
+  .has-panels main section .viz-dot,
+  .has-panels main section .viz-state,
+  .has-panels main section .viz-cloud,
+  .has-panels main section .viz-ket,
+  .has-panels main section .viz figcaption { opacity: 0; }
+
+  .has-panels main section.is-active .viz-dot,
+  .has-panels main section.is-active .viz-state,
+  .has-panels main section.is-active .viz-ket,
+  .has-panels main section.is-active .viz figcaption {
+    opacity: 1;
+    transition: opacity 0.6s ease 0.95s;
+  }
+
+  /* The two clouds land one after the other, so the eye reads "two classes"
+     before the boundary between them stops moving. */
+  .has-panels main section.is-active .viz-cloud {
+    opacity: 0.9;
+    transition: opacity 0.5s ease 0.75s;
+  }
+  .has-panels main section.is-active .viz-cloud-b { transition-delay: 1s; }
 
   /* The footer is short; park its bottom edge at the viewport bottom rather
      than giving it a screen of its own. */
@@ -403,6 +561,9 @@ footer {
   .section-nav { gap: 1.1rem; padding: 0.6rem 1rem; justify-content: flex-start; }
   .section-nav a { font-size: 0.86rem; }
   .scroll-cue { bottom: 1.1rem; font-size: 1.7rem; }
+  .eyebrow { font-size: 0.68rem; gap: 0.6rem; }
+  .eyebrow::before { width: 1.6rem; }
+  .viz { max-width: 13rem; margin-top: 1.6rem; }
   .hero-sections { gap: 0.9rem 1.1rem; margin-top: 1.2rem; }
   .hero-sections a { font-size: 0.9rem; }
   section { padding: 3rem 0; }

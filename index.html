@@ -22,6 +22,9 @@ if ("IntersectionObserver" in window &&
 <body>
 
 <header class="hero">
+  <!-- Ambient drifting-qubit field. Purely decorative, drawn in JS, and absent
+       entirely under reduced motion. -->
+  <canvas class="hero-bg" aria-hidden="true"></canvas>
   <div class="hero-inner">
     <img class="avatar" src="portrait.jpg" alt="Portrait of Florian Heininger" width="480" height="480">
     <div class="hero-text">
@@ -67,6 +70,22 @@ if ("IntersectionObserver" in window &&
     that go looking for it, while keeping them honest when they'd rather report a
     pattern that isn't there.
   </p>
+
+  <!-- Two patients, one diagnosis, two trajectories: the paragraph as a picture.
+       pathLength="1" normalises every stroke so one CSS rule draws them all. -->
+  <figure class="viz">
+    <svg viewBox="0 0 200 200" role="img"
+         aria-label="Two response curves diverging from a shared starting point">
+      <line class="viz-axis" x1="24" y1="176" x2="184" y2="176"/>
+      <line class="viz-axis" x1="24" y1="176" x2="24" y2="28"/>
+      <path class="viz-draw viz-a" pathLength="1" d="M28 116 C 76 110, 108 74, 180 40"/>
+      <path class="viz-draw viz-b" pathLength="1" d="M28 116 C 76 124, 112 140, 180 154"/>
+      <circle class="viz-dot viz-seed" cx="28" cy="116" r="4.5"/>
+      <circle class="viz-dot viz-a-fill" cx="180" cy="40" r="4.5"/>
+      <circle class="viz-dot viz-b-fill" cx="180" cy="154" r="4.5"/>
+    </svg>
+    <figcaption>Same diagnosis, same therapy, two outcomes.</figcaption>
+  </figure>
 </section>
 
 <section id="learning" data-nav="ML">
@@ -85,6 +104,31 @@ if ("IntersectionObserver" in window &&
     difficult part is no longer fitting the data but working out whether the fit
     means anything at all.
   </p>
+
+  <!-- A learned boundary through two classes. The points are hand-placed so the
+       curve genuinely separates them. -->
+  <figure class="viz">
+    <svg viewBox="0 0 200 200" role="img"
+         aria-label="A curved decision boundary separating two classes of points">
+      <path class="viz-draw viz-boundary" pathLength="1"
+            d="M20 160 C 70 150, 110 80, 180 40"/>
+      <g class="viz-cloud viz-cloud-a">
+        <circle cx="40" cy="60" r="4"/><circle cx="60" cy="45" r="4"/>
+        <circle cx="35" cy="95" r="4"/><circle cx="70" cy="80" r="4"/>
+        <circle cx="95" cy="50" r="4"/><circle cx="55" cy="115" r="4"/>
+        <circle cx="85" cy="30" r="4"/><circle cx="110" cy="35" r="4"/>
+        <circle cx="28" cy="45" r="4"/><circle cx="75" cy="62" r="4"/>
+      </g>
+      <g class="viz-cloud viz-cloud-b">
+        <circle cx="120" cy="120" r="4"/><circle cx="150" cy="105" r="4"/>
+        <circle cx="170" cy="130" r="4"/><circle cx="135" cy="150" r="4"/>
+        <circle cx="160" cy="165" r="4"/><circle cx="100" cy="150" r="4"/>
+        <circle cx="180" cy="95" r="4"/><circle cx="145" cy="118" r="4"/>
+        <circle cx="118" cy="178" r="4"/><circle cx="165" cy="72" r="4"/>
+      </g>
+    </svg>
+    <figcaption>A boundary nobody could write down by hand.</figcaption>
+  </figure>
 </section>
 
 <section id="research" data-nav="Quantum ML">
@@ -111,6 +155,25 @@ if ("IntersectionObserver" in window &&
     squint and choose your dataset carefully, which is the polite way of saying
     that nobody knows yet.
   </p>
+
+  <!-- Bloch sphere. The tip precesses about the z-axis; the projection is the
+       real one (see the script at the foot of the page), not a flat spin. -->
+  <figure class="viz">
+    <svg viewBox="0 0 200 200" role="img"
+         aria-label="Bloch sphere with a state vector precessing about the z-axis">
+      <circle class="viz-draw viz-sphere" pathLength="1" cx="100" cy="100" r="74"/>
+      <ellipse class="viz-draw viz-equator" pathLength="1"
+               cx="100" cy="100" rx="74" ry="21"/>
+      <line class="viz-axis" x1="100" y1="18" x2="100" y2="182"/>
+      <g class="viz-state">
+        <line class="viz-vector" x1="100" y1="100" x2="157" y2="53"/>
+        <circle class="viz-dot viz-tip" cx="157" cy="53" r="5"/>
+      </g>
+      <text class="viz-ket" x="100" y="12" text-anchor="middle">|0⟩</text>
+      <text class="viz-ket" x="100" y="196" text-anchor="middle">|1⟩</text>
+    </svg>
+    <figcaption>A qubit, refusing to commit.</figcaption>
+  </figure>
 </section>
 
 <section id="publications">
@@ -190,6 +253,19 @@ if ("IntersectionObserver" in window &&
   fill(document.getElementById("hero-sections"));
   var links = [].slice.call(nav.children);
 
+  // Numbered eyebrow above each heading ("01 / About"). Generated rather than
+  // written out, so the numbering can never drift out of step with the order of
+  // the sections and adding one stays a single HTML edit.
+  sections.forEach(function (section, i) {
+    var h2 = section.querySelector("h2");
+    var eyebrow = document.createElement("p");
+    eyebrow.className = "eyebrow";
+    eyebrow.textContent = ("0" + (i + 1)).slice(-2) + " / " +
+      (section.getAttribute("data-nav") ||
+       (h2 ? h2.textContent.trim() : section.id));
+    section.insertBefore(eyebrow, section.firstElementChild);
+  });
+
   function setActive(id) {
     links.forEach(function (a) {
       a.classList.toggle("is-active", a.getAttribute("href") === "#" + id);
@@ -233,6 +309,117 @@ if ("IntersectionObserver" in window &&
     });
   }, { threshold: [0, 0.5, 1] });
   sections.forEach(function (section) { fade.observe(section); });
+})();
+
+// Ambient field behind the hero: points drifting, with a link drawn between any
+// two that stray close together. Deliberately near the threshold of visibility —
+// it should register as texture, not as a foreground animation.
+(function () {
+  var canvas = document.querySelector(".hero-bg");
+  var hero = document.querySelector(".hero");
+  if (!canvas || !hero || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  var ctx = canvas.getContext("2d");
+  var points = [], w = 0, h = 0, frame = null;
+  var LINK = 130;   // px below which two points are considered entangled
+
+  function resize() {
+    var dpr = Math.min(devicePixelRatio || 1, 2);
+    w = canvas.clientWidth;
+    h = canvas.clientHeight;
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    // Density scales with area, so a wide desktop is not sparse and a phone is
+    // not a soup of points.
+    var want = Math.max(18, Math.min(64, Math.round(w * h / 17000)));
+    while (points.length > want) points.pop();
+    while (points.length < want) {
+      points.push({
+        x: Math.random() * w, y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.13, vy: (Math.random() - 0.5) * 0.13
+      });
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    for (var i = 0; i < points.length; i++) {
+      var p = points[i];
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > w) p.vx *= -1;
+      if (p.y < 0 || p.y > h) p.vy *= -1;
+      for (var j = i + 1; j < points.length; j++) {
+        var q = points[j], dx = p.x - q.x, dy = p.y - q.y;
+        var d = Math.sqrt(dx * dx + dy * dy);
+        if (d > LINK) continue;
+        ctx.strokeStyle = "rgba(142, 205, 247, " + (0.16 * (1 - d / LINK)).toFixed(3) + ")";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y); ctx.stroke();
+      }
+      ctx.fillStyle = "rgba(142, 205, 247, 0.42)";
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 1.4, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    frame = requestAnimationFrame(draw);
+  }
+
+  function run(on) {
+    if (on && frame === null) frame = requestAnimationFrame(draw);
+    if (!on && frame !== null) { cancelAnimationFrame(frame); frame = null; }
+  }
+
+  resize();
+  addEventListener("resize", resize, { passive: true });
+  // No point burning frames on a hero that has scrolled away, or on a tab
+  // nobody is looking at.
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(function (entries) {
+      run(entries[0].isIntersecting && !document.hidden);
+    }, { threshold: 0 }).observe(hero);
+  } else {
+    run(true);
+  }
+  addEventListener("visibilitychange", function () {
+    run(!document.hidden && hero.getBoundingClientRect().bottom > 0);
+  });
+})();
+
+// Let the Bloch vector precess about the z-axis. The tip follows the real
+// projection of a fixed-polar-angle orbit onto the drawn ellipse, so it tracks
+// the equator's perspective instead of spinning flat in the plane of the screen.
+(function () {
+  var state = document.querySelector(".viz-state");
+  var panel = document.getElementById("research");
+  if (!state || !panel || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  var line = state.querySelector(".viz-vector");
+  var tip = state.querySelector(".viz-tip");
+  var CX = 100, CY = 100, R = 74, RY = 21;   // must match the SVG above
+  var THETA = 0.9;                            // polar angle, radians
+  var sinT = Math.sin(THETA), cosT = Math.cos(THETA);
+  var phi = 0, frame = null;
+
+  function step() {
+    phi += 0.006;
+    var x = CX + R * sinT * Math.cos(phi);
+    var y = CY - R * cosT + RY * sinT * Math.sin(phi);
+    line.setAttribute("x2", x.toFixed(1));
+    line.setAttribute("y2", y.toFixed(1));
+    tip.setAttribute("cx", x.toFixed(1));
+    tip.setAttribute("cy", y.toFixed(1));
+    frame = requestAnimationFrame(step);
+  }
+
+  // Only while its own panel is on screen.
+  if (!("IntersectionObserver" in window)) return;
+  new IntersectionObserver(function (entries) {
+    var on = entries[0].isIntersecting;
+    if (on && frame === null) frame = requestAnimationFrame(step);
+    if (!on && frame !== null) { cancelAnimationFrame(frame); frame = null; }
+  }, { threshold: 0.2 }).observe(panel);
 })();
 </script>
 
