@@ -369,6 +369,59 @@ h2 {
 .viz-cloud circle { fill: var(--accent); }
 .viz-cloud-b circle { fill: var(--accent-2); }
 
+/* The About pipeline. Everything that came out of the patient is one hue and
+   the drug is the other, so the two kinds of input stay told apart where they
+   arrive at the same model. The frame declares only its colour: fill, width and
+   the draw-in all come from .viz-draw above. */
+.viz-frame { stroke: var(--rule); }
+
+.viz-helix path { fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-linecap: round; }
+.viz-helix line { stroke: var(--accent); stroke-width: 1.2; opacity: 0.65; }
+
+/* A protein as a handful of overlapping blobs: translucent, so the places where
+   they pile up read as depth rather than as separate circles. */
+.viz-blob circle {
+  fill: var(--accent);
+  fill-opacity: 0.32;
+  stroke: var(--accent);
+  stroke-width: 1.2;
+}
+
+.viz-mol {
+  fill: none;
+  stroke: var(--accent-2);
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+/* Plumbing, not a class of its own, so it stays neutral. */
+.viz-feed line { stroke: var(--muted); stroke-width: 1.6; stroke-linecap: round; }
+.viz-feed polygon { fill: var(--muted); }
+.viz-mesh line { stroke: var(--rule); stroke-width: 0.8; }
+
+/* The predictions leaving the model, built exactly like the arrows feeding it.
+   They were dashed at first, to say that these are predictions and not
+   observations, but a 5-6 dash across nine units is two stubs and a gap: it
+   read as a broken line rather than an uncertain one. The uncertainty was
+   always in the needles anyway. */
+.viz-out line { stroke-width: 1.6; stroke-linecap: round; }
+.viz-out-a line { stroke: var(--accent); }
+.viz-out-a polygon { fill: var(--accent); }
+.viz-out-b line { stroke: var(--muted); }
+.viz-out-b polygon { fill: var(--muted); }
+
+/* The dials. The face is structural and the needle carries the verdict, so the
+   reading survives being squinted at: it is an angle first, a colour second. */
+.viz-dial path { fill: none; stroke: var(--rule); stroke-width: 2; stroke-linecap: round; }
+.viz-dial circle { fill: var(--fg); }
+.viz-needle { stroke-width: 2; stroke-linecap: round; }
+.viz-needle-a { stroke: var(--accent); }
+.viz-needle-b { stroke: var(--muted); }
+
+/* A quieter label, for naming an input rather than announcing a result. */
+.viz-label-m { fill: var(--muted); font-size: 8px; }
+
 h3 {
   font-size: 1.02rem;
   margin: 1.4rem 0 0.5rem;
@@ -568,8 +621,10 @@ footer {
   .has-panels main section .viz-cloud,
   .has-panels main section .viz-label,
   .has-panels main section .viz-branch,
+  .has-panels main section .viz-out,
   .has-panels main section .viz-open,
   .has-panels main section .viz-parts,
+  .has-panels main section .viz-dial,
   .has-panels main section .viz-lens,
   .has-panels main section .viz-qml { opacity: 0; }
 
@@ -586,11 +641,15 @@ footer {
     opacity: 1;
     transition: opacity 0.5s ease 1s;
   }
-  .has-panels main section.is-active .viz-branch {
+  .has-panels main section.is-active .viz-branch,
+  .has-panels main section.is-active .viz-out {
     opacity: 1;
     transition: opacity 0.5s ease 1.05s;
   }
-  .has-panels main section.is-active .viz-open {
+  /* Where each possible future lands: the open ends of a fork, or the dials
+     that say how well each therapy is expected to do. */
+  .has-panels main section.is-active .viz-open,
+  .has-panels main section.is-active .viz-dial {
     opacity: 1;
     transition: opacity 0.5s ease 1.3s;
   }

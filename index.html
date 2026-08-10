@@ -70,24 +70,129 @@ if ("IntersectionObserver" in window &&
     when they'd rather report a pattern that isn't there.
   </p>
 
-  <!-- One shared course that forks. The trunk is solid because it is what you
-       know; the branches are dashed because which one a patient takes is
-       precisely what cannot be said in advance. The no-response branch simply
-       carries the trunk's own line onward, so the responder is the only one
-       that departs from it. -->
+  <!-- What the section actually describes, as a picture: what came out of the
+       patient and what we propose to give them go in together, and a prediction
+       comes out for every therapy on the table rather than a verdict on one.
+       The arrows leaving the model are built exactly like the ones feeding it,
+       and clear the box rather than crossing its wall, so the whole reads as
+       one pipeline. The dials descend: one helps, one helps somebody who isn't
+       this patient, one helps nobody at all. -->
   <figure class="viz">
-    <svg viewBox="0 0 200 200" role="img"
-         aria-label="A level course that forks: one dashed line carries straight on, labelled no response, while another rises away from it, labelled good response">
-      <line class="viz-axis" x1="24" y1="176" x2="184" y2="176"/>
-      <line class="viz-axis" x1="24" y1="28" x2="24" y2="176"/>
-      <path class="viz-draw viz-trunk" pathLength="1" d="M32 116 L96 116"/>
-      <path class="viz-branch viz-b" d="M96 116 L176 116"/>
-      <path class="viz-branch viz-a" d="M96 116 C 124 112, 148 82, 176 52"/>
-      <circle class="viz-node" cx="96" cy="116" r="4.5"/>
-      <circle class="viz-open viz-end-a" cx="176" cy="52" r="5"/>
-      <circle class="viz-open viz-end-b" cx="176" cy="116" r="5"/>
-      <text class="viz-label viz-label-a" x="176" y="40" text-anchor="end">good response</text>
-      <text class="viz-label viz-label-b" x="176" y="136" text-anchor="end">no response</text>
+    <svg viewBox="0 0 200 238" role="img"
+         aria-label="Genomic and proteomic measurements and a drug descriptor feed into a neural network, which predicts a response for each candidate therapy: one dial reads high, the next reads low, and the last is pinned at nothing">
+
+      <!-- Drawn first, and on its own: the model is the container everything
+           else arrives inside. -->
+      <path class="viz-draw viz-frame" pathLength="1"
+            d="M32 80 H168 A8 8 0 0 1 176 88 V154 A8 8 0 0 1 168 162
+               H32 A8 8 0 0 1 24 154 V88 A8 8 0 0 1 32 80 Z"/>
+
+      <g class="viz-parts">
+
+        <!-- Two half-period curves per strand, in opposite phase, so they cross
+             at 8, 24 and 40 and the rungs sit where they are furthest apart. -->
+        <g class="viz-helix">
+          <path d="M40 8 C 48 12, 48 20, 40 24 C 32 28, 32 36, 40 40"/>
+          <path d="M40 8 C 32 12, 32 20, 40 24 C 48 28, 48 36, 40 40"/>
+          <line x1="35.5" y1="12" x2="44.5" y2="12"/>
+          <line x1="34" y1="16" x2="46" y2="16"/>
+          <line x1="35.5" y1="20" x2="44.5" y2="20"/>
+          <line x1="35.5" y1="28" x2="44.5" y2="28"/>
+          <line x1="34" y1="32" x2="46" y2="32"/>
+          <line x1="35.5" y1="36" x2="44.5" y2="36"/>
+        </g>
+
+        <g class="viz-blob">
+          <circle cx="92" cy="24" r="8"/><circle cx="102" cy="18" r="9"/>
+          <circle cx="109" cy="27" r="7.5"/><circle cx="98" cy="32" r="7"/>
+          <circle cx="107" cy="35" r="5.5"/><circle cx="91" cy="33" r="5"/>
+        </g>
+
+        <!-- A ring with a circle in it is the one chemical drawing everybody
+             reads without being told what it is. -->
+        <g class="viz-mol">
+          <polygon points="160,13 171.3,19.5 171.3,32.5 160,39 148.7,32.5 148.7,19.5"/>
+          <circle cx="160" cy="26" r="6.5"/>
+          <line x1="171.3" y1="19.5" x2="176.5" y2="16.5"/>
+          <line x1="148.7" y1="32.5" x2="143.5" y2="35.5"/>
+        </g>
+
+        <g class="viz-feed">
+          <line x1="40" y1="57" x2="40" y2="68"/>
+          <polygon points="36.5,68 43.5,68 40,74"/>
+          <line x1="100" y1="57" x2="100" y2="68"/>
+          <polygon points="96.5,68 103.5,68 100,74"/>
+          <line x1="160" y1="57" x2="160" y2="68"/>
+          <polygon points="156.5,68 163.5,68 160,74"/>
+        </g>
+
+        <g class="viz-mesh">
+          <line x1="40" y1="98" x2="40" y2="124"/><line x1="40" y1="98" x2="80" y2="124"/>
+          <line x1="40" y1="98" x2="120" y2="124"/><line x1="40" y1="98" x2="160" y2="124"/>
+          <line x1="80" y1="98" x2="40" y2="124"/><line x1="80" y1="98" x2="80" y2="124"/>
+          <line x1="80" y1="98" x2="120" y2="124"/><line x1="80" y1="98" x2="160" y2="124"/>
+          <line x1="120" y1="98" x2="40" y2="124"/><line x1="120" y1="98" x2="80" y2="124"/>
+          <line x1="120" y1="98" x2="120" y2="124"/><line x1="120" y1="98" x2="160" y2="124"/>
+          <line x1="160" y1="98" x2="40" y2="124"/><line x1="160" y1="98" x2="80" y2="124"/>
+          <line x1="160" y1="98" x2="120" y2="124"/><line x1="160" y1="98" x2="160" y2="124"/>
+          <line x1="40" y1="124" x2="40" y2="150"/><line x1="40" y1="124" x2="100" y2="150"/>
+          <line x1="40" y1="124" x2="160" y2="150"/>
+          <line x1="80" y1="124" x2="40" y2="150"/><line x1="80" y1="124" x2="100" y2="150"/>
+          <line x1="80" y1="124" x2="160" y2="150"/>
+          <line x1="120" y1="124" x2="40" y2="150"/><line x1="120" y1="124" x2="100" y2="150"/>
+          <line x1="120" y1="124" x2="160" y2="150"/>
+          <line x1="160" y1="124" x2="40" y2="150"/><line x1="160" y1="124" x2="100" y2="150"/>
+          <line x1="160" y1="124" x2="160" y2="150"/>
+        </g>
+      </g>
+
+      <g class="viz-node">
+        <circle cx="40" cy="98" r="4.5"/><circle cx="80" cy="98" r="4.5"/>
+        <circle cx="120" cy="98" r="4.5"/><circle cx="160" cy="98" r="4.5"/>
+        <circle cx="40" cy="124" r="4.5"/><circle cx="80" cy="124" r="4.5"/>
+        <circle cx="120" cy="124" r="4.5"/><circle cx="160" cy="124" r="4.5"/>
+        <circle cx="40" cy="150" r="4.5"/><circle cx="100" cy="150" r="4.5"/>
+        <circle cx="160" cy="150" r="4.5"/>
+      </g>
+
+      <g class="viz-out viz-out-a">
+        <line x1="40" y1="168" x2="40" y2="177"/>
+        <polygon points="36.5,177 43.5,177 40,183"/>
+      </g>
+      <g class="viz-out viz-out-b">
+        <line x1="100" y1="168" x2="100" y2="177"/>
+        <polygon points="96.5,177 103.5,177 100,183"/>
+      </g>
+      <g class="viz-out viz-out-b">
+        <line x1="160" y1="168" x2="160" y2="177"/>
+        <polygon points="156.5,177 163.5,177 160,183"/>
+      </g>
+
+      <g class="viz-dial">
+        <path d="M25 204 A15 15 0 0 1 55 204"/>
+        <path d="M85 204 A15 15 0 0 1 115 204"/>
+        <path d="M145 204 A15 15 0 0 1 175 204"/>
+        <!-- Three readings that fall away: swung well up, down near the floor,
+             and pinned flat against the stop. -->
+        <line class="viz-needle viz-needle-a" x1="40" y1="204" x2="47" y2="194"/>
+        <line class="viz-needle viz-needle-b" x1="100" y1="204" x2="90" y2="198"/>
+        <line class="viz-needle viz-needle-b" x1="160" y1="204" x2="148" y2="202"/>
+        <circle cx="40" cy="204" r="2"/>
+        <circle cx="100" cy="204" r="2"/>
+        <circle cx="160" cy="204" r="2"/>
+      </g>
+
+      <text class="viz-label viz-label-m" x="40" y="50" text-anchor="middle">genomics</text>
+      <text class="viz-label viz-label-m" x="100" y="50" text-anchor="middle">proteomics</text>
+      <text class="viz-label viz-label-m" x="160" y="50" text-anchor="middle">drug</text>
+
+      <!-- The same first word three times, so the three readings line up and
+           only the qualification underneath changes. -->
+      <text class="viz-label viz-label-a" x="40" y="222" text-anchor="middle">helps</text>
+      <text class="viz-label viz-label-m" x="100" y="222" text-anchor="middle">helps</text>
+      <text class="viz-label viz-label-m" x="100" y="232" text-anchor="middle">someone else</text>
+      <text class="viz-label viz-label-m" x="160" y="222" text-anchor="middle">helps</text>
+      <text class="viz-label viz-label-m" x="160" y="232" text-anchor="middle">no one</text>
     </svg>
   </figure>
 </section>
