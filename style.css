@@ -493,13 +493,13 @@ p { margin: 0 0 0.8rem; }
 
 /* my work */
 
-/* Publications and talks side by side. Stacked, the two lists run past a single
-   panel; in two columns they fit, and they use the gutter this section has free
-   because it carries no diagram. */
+/* Publications, talks and awards side by side. Stacked, the lists run past a
+   single panel; in columns they fit, and they use the gutter this section has
+   free because it carries no diagram. */
 .work-cols { display: grid; gap: 1.4rem 3rem; }
 
 @media (min-width: 701px) {
-  .work-cols { grid-template-columns: 1fr 1fr; align-items: start; }
+  .work-cols { grid-template-columns: repeat(3, 1fr); align-items: start; }
 }
 
 .work-cols h3 { margin-top: 0; }
@@ -576,9 +576,9 @@ footer {
      line up with the ones that have and do not sprawl to the full 64rem. */
   main section > :not(.viz) { max-width: 40rem; }
 
-  /* The exception: two columns of lists need more than one column of prose.
+  /* The exception: three columns of lists need more than one column of prose.
      Must follow the rule above — same specificity, so source order decides. */
-  main section > .work-cols { max-width: 56rem; }
+  main section > .work-cols { max-width: 70rem; }
 
   main section > .viz {
     position: absolute;
